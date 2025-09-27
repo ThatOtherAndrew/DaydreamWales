@@ -19,3 +19,4 @@ texture = ExtResource("2")
 shape = SubResource("RectangleShape2D_1")
 
 [node name="MaceSystem" parent="." instance=ExtResource("3")]
+z_index = -1
