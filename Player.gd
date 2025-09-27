@@ -1,15 +1,15 @@
 extends CharacterBody2D
 
 @export_group("Core Movement")
-@export var max_speed: float = 400.0
-@export var acceleration: float = 3000.0
+@export var max_speed: float = 2000.0
+@export var acceleration: float = 2000.0
 @export var friction: float = 2500.0
 
 @export_group("Movement Feel")
 @export var turn_boost: float = 1.5
 @export var reverse_boost: float = 2.0
 @export var momentum_retention: float = 0.2
-@export var speed_ramp_curve: float = 1.5
+@export var speed_ramp_curve: float = 0.0
 @export var stop_threshold: float = 5.0
 
 @export_group("Advanced Tuning")
@@ -99,8 +99,9 @@ func _physics_process(delta):
             elif dot < 0.7:
                 accel *= turn_boost
 
-        var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
-        accel *= (1.0 + speed_factor * 0.5)
+        if speed_ramp_curve > 0:
+            var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
+            accel *= (1.0 + speed_factor * 0.5)
 
         current_velocity = current_velocity.lerp(target_velocity, min(1.0, accel * delta / max_speed))
 
