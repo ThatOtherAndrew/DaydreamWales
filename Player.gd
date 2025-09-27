@@ -31,14 +31,17 @@ extends CharacterBody2D
 @export var sprite_scale: float = 0.2
 @export var happy_face_speed_threshold: float = 80.0
 @export var rotation_smoothing: float = 0.5
-@export var squash_stretch_intensity: float = 10.0
-@export var squash_stretch_smoothing: float = 0.5
+@export var squash_stretch_intensity: float = 20.0
+@export var squash_stretch_smoothing: float = 1.0
+@export var acceleration_spike_multiplier: float = 15.0
+@export var acceleration_spike_duration: float = 0.2
 
 var current_velocity: Vector2 = Vector2.ZERO
 var momentum: Vector2 = Vector2.ZERO
 var sprite: Sprite2D
 var collision_shape: CollisionShape2D
 var previous_velocity: Vector2 = Vector2.ZERO
+var acceleration_spike_timer: float = 0.0
 
 func _ready():
     _register_input_actions()
@@ -129,6 +132,19 @@ func _physics_process(delta):
     var is_decelerating = current_velocity.length() < previous_velocity.length()
     var is_slow = current_velocity.length() < happy_face_speed_threshold
 
+    # Detect acceleration spike (from standstill OR sharp turns)
+    var was_stopped = previous_velocity.length() <= stop_threshold
+    var is_moving = current_velocity.length() > stop_threshold
+
+    # Detect sharp direction change
+    var direction_change = 0.0
+    if previous_velocity.length() > stop_threshold and current_velocity.length() > stop_threshold:
+        direction_change = 1.0 - previous_velocity.normalized().dot(current_velocity.normalized())
+
+    # Trigger spike on start or sharp turn (> 45 degree change)
+    if (was_stopped and is_moving) or (direction_change > 0.5):
+        acceleration_spike_timer = acceleration_spike_duration
+
     if is_decelerating and is_slow:
         sprite.texture = happy_texture
     elif current_velocity.length() > stop_threshold:
@@ -138,9 +154,18 @@ func _physics_process(delta):
         var target_rotation = current_velocity.angle() + PI / 2
         sprite.rotation = lerp_angle(sprite.rotation, target_rotation, rotation_smoothing)
 
+    # Apply squash and stretch with smoothed acceleration spike
     var speed_ratio = clamp(current_velocity.length() / max_speed, 0.0, 1.0)
-    var stretch = 1.0 + (speed_ratio * squash_stretch_intensity)
-    var squash = 1.0 - (speed_ratio * squash_stretch_intensity * 0.5)
+    var intensity_multiplier = 1.0
+
+    if acceleration_spike_timer > 0:
+        # Smooth easing curve for the spike intensity
+        var spike_progress = acceleration_spike_timer / acceleration_spike_duration
+        intensity_multiplier = 1.0 + (acceleration_spike_multiplier - 1.0) * spike_progress * spike_progress
+        acceleration_spike_timer -= delta
+
+    var stretch = 1.0 + (speed_ratio * squash_stretch_intensity * intensity_multiplier)
+    var squash = 1.0 - (speed_ratio * squash_stretch_intensity * 0.5 * intensity_multiplier)
     var target_scale = Vector2(squash * sprite_scale, stretch * sprite_scale)
     sprite.scale = sprite.scale.lerp(target_scale, squash_stretch_smoothing)
 
