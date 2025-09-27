@@ -8,7 +8,3 @@
 zoom = Vector2(2, 2)
 
 [node name="Player" parent="." instance=ExtResource("1")]
-max_speed = 20000.0
-acceleration = 2000.0
-friction = 200.0
-rotation_smoothing = 0.5

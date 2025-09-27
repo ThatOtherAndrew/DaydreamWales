@@ -8,12 +8,6 @@ size = Vector2(32, 32)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1")
-max_speed = 2000.0
-acceleration = 1200.0
-friction = 150.0
-reverse_boost = 0.5
-sprite_scale = 0.2
-happy_face_speed_threshold = 80.0
 
 [node name="Visual" type="Node2D" parent="."]
 

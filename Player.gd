@@ -1,13 +1,13 @@
 extends CharacterBody2D
 
 @export_group("Core Movement")
-@export var max_speed: float = 2000.0
+@export var max_speed: float = 20000.0
 @export var acceleration: float = 2000.0
-@export var friction: float = 2500.0
+@export var friction: float = 200.0
 
 @export_group("Movement Feel")
 @export var turn_boost: float = 1.5
-@export var reverse_boost: float = 2.0
+@export var reverse_boost: float = 0.5
 @export var momentum_retention: float = 0.2
 @export var speed_ramp_curve: float = 0.0
 @export var stop_threshold: float = 5.0
@@ -28,9 +28,11 @@ extends CharacterBody2D
 @export_group("Sprites")
 @export var happy_texture: Texture2D = preload("res://assets/guy/happy.png")
 @export var angry_texture: Texture2D = preload("res://assets/guy/angry.png")
-@export var sprite_scale: float = 1.0
-@export var happy_face_speed_threshold: float = 150.0
-@export var rotation_smoothing: float = 0.15
+@export var sprite_scale: float = 0.2
+@export var happy_face_speed_threshold: float = 80.0
+@export var rotation_smoothing: float = 0.5
+@export var squash_stretch_intensity: float = 10.0
+@export var squash_stretch_smoothing: float = 0.5
 
 var current_velocity: Vector2 = Vector2.ZERO
 var momentum: Vector2 = Vector2.ZERO
@@ -41,7 +43,6 @@ var previous_velocity: Vector2 = Vector2.ZERO
 func _ready():
     _register_input_actions()
     sprite = $Visual/Sprite2D
-    sprite.scale = Vector2(sprite_scale, sprite_scale)
     collision_shape = $CollisionShape2D
     collision_shape.scale = Vector2(sprite_scale, sprite_scale)
 
@@ -136,5 +137,11 @@ func _physics_process(delta):
     if current_velocity.length() > stop_threshold:
         var target_rotation = current_velocity.angle() + PI / 2
         sprite.rotation = lerp_angle(sprite.rotation, target_rotation, rotation_smoothing)
+
+    var speed_ratio = clamp(current_velocity.length() / max_speed, 0.0, 1.0)
+    var stretch = 1.0 + (speed_ratio * squash_stretch_intensity)
+    var squash = 1.0 - (speed_ratio * squash_stretch_intensity * 0.5)
+    var target_scale = Vector2(squash * sprite_scale, stretch * sprite_scale)
+    sprite.scale = sprite.scale.lerp(target_scale, squash_stretch_smoothing)
 
     previous_velocity = current_velocity
