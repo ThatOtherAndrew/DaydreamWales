@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var rope_length: float = 50.0
+@export var rope_length: float = 60.0
 @export var segment_count: int = 8
 @export var rope_stiffness: float = 50.0
 @export var rope_damping: float = 10.0
@@ -59,8 +59,8 @@ func _physics_process(delta):
     for i in range(1, rope_segments.size() - 1):  # Don't update last segment here
         var segment = rope_segments[i]
         if not segment.pinned:
-            # Simple velocity with consistent damping - no special cases
-            var velocity = (segment.position - segment.old_position) * 0.98
+            # Less damping for more energy preservation and responsiveness
+            var velocity = (segment.position - segment.old_position) * 0.995
             segment.old_position = segment.position
             segment.position += velocity
 
@@ -78,11 +78,14 @@ func _physics_process(delta):
         var excess = current_dist - segment_length
         var pull_direction = (second_last.position - mace.global_position).normalized()
 
-        # Simple proportional force based on how much it's stretched
-        var pull_force = pull_direction * excess * 500.0
+        # Stronger force for more responsiveness, but still proportional
+        var pull_force = pull_direction * excess * 1500.0
 
-        # Light velocity damping to prevent oscillation
-        var damping = -mace.linear_velocity * 2.0
+        # Very light damping only when needed
+        var velocity_along_rope = mace.linear_velocity.dot(pull_direction)
+        var damping = Vector2.ZERO
+        if velocity_along_rope < -100:  # Only damp if moving away very fast
+            damping = pull_direction * velocity_along_rope * 0.5
 
         mace.apply_force(pull_force + damping)
 
@@ -92,8 +95,8 @@ func _physics_process(delta):
     # Simple distance constraints - only prevent stretching, allow compression
     var expected_length = rope_length / segment_count
 
-    # Multiple passes for stability
-    for iteration in range(2):
+    # More iterations for tighter rope
+    for iteration in range(4):
         # Constrain each pair of segments
         for i in range(rope_segments.size() - 1):
             var seg1 = rope_segments[i]
@@ -103,8 +106,8 @@ func _physics_process(delta):
             var distance = offset.length()
 
             # Only constrain if stretched (not compressed)
-            if distance > expected_length:
-                var correction = offset.normalized() * (distance - expected_length) * 0.5
+            if distance > expected_length * 1.01:  # Small tolerance
+                var correction = offset.normalized() * (distance - expected_length) * 0.8  # Stronger correction
 
                 if not seg1.pinned:
                     seg1.position += correction
