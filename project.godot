@@ -18,6 +18,10 @@ config/features=PackedStringArray("4.5", "GL Compatibility")
 
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

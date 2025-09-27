@@ -15,3 +15,4 @@ end_cap_mode = 2
 antialiased = true
 
 [node name="Mace" parent="." instance=ExtResource("1")]
+linear_damp = 3.0
