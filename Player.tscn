@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b4j8y0x1k2m3n"]
+[gd_scene load_steps=4 format=3 uid="uid://b4j8y0x1k2m3n"]
 
 [ext_resource type="Script" uid="uid://8ijvj5c2mp35" path="res://Player.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://deo0sfakf2pfm" path="res://assets/guy/happy.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(32, 32)
@@ -8,23 +9,16 @@ size = Vector2(32, 32)
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1")
 max_speed = 2000.0
-acceleration = 5000.0
-friction = 500.0
+acceleration = 1200.0
+friction = 150.0
 reverse_boost = 0.5
+sprite_scale = 0.2
+happy_face_speed_threshold = 80.0
 
 [node name="Visual" type="Node2D" parent="."]
 
-[node name="ColorRect" type="ColorRect" parent="Visual"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
-color = Color(0.2, 0.6, 1, 1)
+[node name="Sprite2D" type="Sprite2D" parent="Visual"]
+texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1")

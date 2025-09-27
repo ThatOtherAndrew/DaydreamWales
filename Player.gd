@@ -25,11 +25,24 @@ extends CharacterBody2D
 @export var move_left_action: String = "move_left"
 @export var move_right_action: String = "move_right"
 
+@export_group("Sprites")
+@export var happy_texture: Texture2D = preload("res://assets/guy/happy.png")
+@export var angry_texture: Texture2D = preload("res://assets/guy/angry.png")
+@export var sprite_scale: float = 1.0
+@export var happy_face_speed_threshold: float = 150.0
+
 var current_velocity: Vector2 = Vector2.ZERO
 var momentum: Vector2 = Vector2.ZERO
+var sprite: Sprite2D
+var collision_shape: CollisionShape2D
+var previous_velocity: Vector2 = Vector2.ZERO
 
 func _ready():
     _register_input_actions()
+    sprite = $Visual/Sprite2D
+    sprite.scale = Vector2(sprite_scale, sprite_scale)
+    collision_shape = $CollisionShape2D
+    collision_shape.scale = Vector2(sprite_scale, sprite_scale)
 
 func _register_input_actions():
     if not InputMap.has_action(move_up_action):
@@ -109,3 +122,13 @@ func _physics_process(delta):
 
     velocity = current_velocity
     move_and_slide()
+
+    var is_decelerating = current_velocity.length() < previous_velocity.length()
+    var is_slow = current_velocity.length() < happy_face_speed_threshold
+
+    if is_decelerating and is_slow:
+        sprite.texture = happy_texture
+    elif current_velocity.length() > stop_threshold:
+        sprite.texture = angry_texture
+
+    previous_velocity = current_velocity
