@@ -30,6 +30,7 @@ extends CharacterBody2D
 @export var angry_texture: Texture2D = preload("res://assets/guy/angry.png")
 @export var sprite_scale: float = 1.0
 @export var happy_face_speed_threshold: float = 150.0
+@export var rotation_smoothing: float = 0.15
 
 var current_velocity: Vector2 = Vector2.ZERO
 var momentum: Vector2 = Vector2.ZERO
@@ -130,5 +131,9 @@ func _physics_process(delta):
         sprite.texture = happy_texture
     elif current_velocity.length() > stop_threshold:
         sprite.texture = angry_texture
+
+    if current_velocity.length() > stop_threshold:
+        var target_rotation = current_velocity.angle() + PI / 2
+        sprite.rotation = lerp_angle(sprite.rotation, target_rotation, rotation_smoothing)
 
     previous_velocity = current_velocity

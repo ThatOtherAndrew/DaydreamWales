@@ -8,3 +8,4 @@
 zoom = Vector2(2, 2)
 
 [node name="Player" parent="." instance=ExtResource("1")]
+rotation_smoothing = 0.5
