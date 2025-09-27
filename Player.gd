@@ -39,87 +39,91 @@ var collision_shape: CollisionShape2D
 var previous_velocity: Vector2 = Vector2.ZERO
 
 func _ready():
+<<<<<<< Updated upstream
     _register_input_actions()
     sprite = $Visual/Sprite2D
     sprite.scale = Vector2(sprite_scale, sprite_scale)
     collision_shape = $CollisionShape2D
     collision_shape.scale = Vector2(sprite_scale, sprite_scale)
+=======
+	_register_input_actions()
+>>>>>>> Stashed changes
 
 func _register_input_actions():
-    if not InputMap.has_action(move_up_action):
-        InputMap.add_action(move_up_action)
-        var up_event = InputEventKey.new()
-        up_event.keycode = KEY_W
-        InputMap.action_add_event(move_up_action, up_event)
+	if not InputMap.has_action(move_up_action):
+		InputMap.add_action(move_up_action)
+		var up_event = InputEventKey.new()
+		up_event.keycode = KEY_W
+		InputMap.action_add_event(move_up_action, up_event)
 
-    if not InputMap.has_action(move_down_action):
-        InputMap.add_action(move_down_action)
-        var down_event = InputEventKey.new()
-        down_event.keycode = KEY_S
-        InputMap.action_add_event(move_down_action, down_event)
+	if not InputMap.has_action(move_down_action):
+		InputMap.add_action(move_down_action)
+		var down_event = InputEventKey.new()
+		down_event.keycode = KEY_S
+		InputMap.action_add_event(move_down_action, down_event)
 
-    if not InputMap.has_action(move_left_action):
-        InputMap.add_action(move_left_action)
-        var left_event = InputEventKey.new()
-        left_event.keycode = KEY_A
-        InputMap.action_add_event(move_left_action, left_event)
+	if not InputMap.has_action(move_left_action):
+		InputMap.add_action(move_left_action)
+		var left_event = InputEventKey.new()
+		left_event.keycode = KEY_A
+		InputMap.action_add_event(move_left_action, left_event)
 
-    if not InputMap.has_action(move_right_action):
-        InputMap.add_action(move_right_action)
-        var right_event = InputEventKey.new()
-        right_event.keycode = KEY_D
-        InputMap.action_add_event(move_right_action, right_event)
+	if not InputMap.has_action(move_right_action):
+		InputMap.add_action(move_right_action)
+		var right_event = InputEventKey.new()
+		right_event.keycode = KEY_D
+		InputMap.action_add_event(move_right_action, right_event)
 
 func _physics_process(delta):
-    var input_dir = Vector2.ZERO
+	var input_dir = Vector2.ZERO
 
-    if Input.is_action_pressed(move_up_action):
-        input_dir.y -= 1
-    if Input.is_action_pressed(move_down_action):
-        input_dir.y += 1
-    if Input.is_action_pressed(move_left_action):
-        input_dir.x -= 1
-    if Input.is_action_pressed(move_right_action):
-        input_dir.x += 1
+	if Input.is_action_pressed(move_up_action):
+		input_dir.y -= 1
+	if Input.is_action_pressed(move_down_action):
+		input_dir.y += 1
+	if Input.is_action_pressed(move_left_action):
+		input_dir.x -= 1
+	if Input.is_action_pressed(move_right_action):
+		input_dir.x += 1
 
-    if input_dir.length() > 0:
-        input_dir = input_dir.normalized()
-        if input_dir.x != 0 and input_dir.y != 0:
-            input_dir *= diagonal_compensation
+	if input_dir.length() > 0:
+		input_dir = input_dir.normalized()
+		if input_dir.x != 0 and input_dir.y != 0:
+			input_dir *= diagonal_compensation
 
-    if input_dir != Vector2.ZERO:
-        var target_velocity = input_dir * max_speed
+	if input_dir != Vector2.ZERO:
+		var target_velocity = input_dir * max_speed
 
-        var accel = acceleration
+		var accel = acceleration
 
-        if current_velocity.length() > 0:
-            var dot = current_velocity.normalized().dot(input_dir)
-            if dot < -0.5:
-                accel *= reverse_boost
-            elif dot < 0.7:
-                accel *= turn_boost
+		if current_velocity.length() > 0:
+			var dot = current_velocity.normalized().dot(input_dir)
+			if dot < -0.5:
+				accel *= reverse_boost
+			elif dot < 0.7:
+				accel *= turn_boost
 
-        var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
-        accel *= (1.0 + speed_factor * 0.5)
+		var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
+		accel *= (1.0 + speed_factor * 0.5)
 
-        current_velocity = current_velocity.lerp(target_velocity, min(1.0, accel * delta / max_speed))
+		current_velocity = current_velocity.lerp(target_velocity, min(1.0, accel * delta / max_speed))
 
-        momentum = momentum.lerp(current_velocity * momentum_retention, velocity_smoothing)
+		momentum = momentum.lerp(current_velocity * momentum_retention, velocity_smoothing)
 
-        current_velocity = (current_velocity * input_responsiveness + momentum * (1.0 - input_responsiveness))
-    else:
-        current_velocity = current_velocity.move_toward(Vector2.ZERO, friction * delta)
-        momentum = momentum * 0.9
+		current_velocity = (current_velocity * input_responsiveness + momentum * (1.0 - input_responsiveness))
+	else:
+		current_velocity = current_velocity.move_toward(Vector2.ZERO, friction * delta)
+		momentum = momentum * 0.9
 
-        if current_velocity.length() < stop_threshold:
-            current_velocity = Vector2.ZERO
-            momentum = Vector2.ZERO
+		if current_velocity.length() < stop_threshold:
+			current_velocity = Vector2.ZERO
+			momentum = Vector2.ZERO
 
-    if current_velocity.length() > max_speed:
-        if current_velocity.length() > max_speed * max_overspeed:
-            current_velocity = current_velocity.normalized() * max_speed * max_overspeed
-        else:
-            current_velocity *= overspeed_decay
+	if current_velocity.length() > max_speed:
+		if current_velocity.length() > max_speed * max_overspeed:
+			current_velocity = current_velocity.normalized() * max_speed * max_overspeed
+		else:
+			current_velocity *= overspeed_decay
 
     velocity = current_velocity
     move_and_slide()
