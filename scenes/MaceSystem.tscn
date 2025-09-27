@@ -15,4 +15,6 @@ end_cap_mode = 2
 antialiased = true
 
 [node name="Mace" parent="." instance=ExtResource("1")]
+contact_monitor = false
+max_contacts_reported = 0
 linear_damp = 3.0

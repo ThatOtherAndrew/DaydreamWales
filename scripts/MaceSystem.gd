@@ -27,6 +27,17 @@ func _ready():
     await get_parent().ready
     player_ref = get_parent()
 
+    # Wait for next frame to ensure mace is fully initialized
+    await get_tree().process_frame
+
+    # Set mace owner based on player name
+    if player_ref.name == "Player":
+        mace.set_owner_player(1)
+        print("MaceSystem: Set Player 1's mace")
+    elif player_ref.name == "Player2":
+        mace.set_owner_player(2)
+        print("MaceSystem: Set Player 2's mace")
+
     initialize_rope()
 
 func initialize_rope():
@@ -35,21 +46,22 @@ func initialize_rope():
     var segment_length = rope_length / segment_count
     var start_pos = player_ref.global_position if player_ref else global_position
 
-    # Initialize rope horizontally to the right to prevent bobbing
+    # Initialize rope horizontally - right for Player 1, left for Player 2 to avoid overlap
+    var direction = Vector2.RIGHT if player_ref.name == "Player" else Vector2.LEFT
     for i in range(segment_count + 1):
-        var pos = start_pos + Vector2(segment_length * i, 0)
+        var pos = start_pos + direction * (segment_length * i)
         var segment = RopeSegment.new(pos)
         if i == 0:
             segment.pinned = true  # Pin first segment to player
         rope_segments.append(segment)
 
     # Set mace position to end of rope
-    if mace:
+    if mace and not rope_segments.is_empty():
         mace.global_position = rope_segments[-1].position
         mace.linear_velocity = Vector2.ZERO  # Start at rest
 
-func _physics_process(delta):
-    if not player_ref or not mace:
+func _physics_process(_delta):
+    if not player_ref or not mace or rope_segments.is_empty():
         return
 
     # Update first segment to player position
@@ -124,5 +136,5 @@ func update_rope_visual():
 
 func _process(_delta):
     # Ensure rope visual stays updated
-    if rope_line and rope_segments.size() > 0:
+    if rope_line and not rope_segments.is_empty():
         update_rope_visual()

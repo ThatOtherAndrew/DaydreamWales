@@ -42,12 +42,48 @@ var sprite: Sprite2D
 var collision_shape: CollisionShape2D
 var previous_velocity: Vector2 = Vector2.ZERO
 var acceleration_spike_timer: float = 0.0
+var spawn_position: Vector2
+var is_dead = false
 
 func _ready():
     _register_input_actions()
     sprite = $Visual/Sprite2D
     collision_shape = $CollisionShape2D
     collision_shape.scale = Vector2(sprite_scale, sprite_scale)
+    spawn_position = global_position
+
+    # Connect to GameManager signals
+    await get_tree().process_frame
+    var game_manager = get_tree().current_scene.get_node_or_null("GameManager")
+    if game_manager:
+        game_manager.player_died.connect(_on_player_died)
+        game_manager.level_reset.connect(_on_level_reset)
+
+func _on_player_died(player_num: int):
+    if name == "Player" and player_num == 1:
+        is_dead = true
+        visible = false
+        collision_shape.disabled = true
+        # Hide mace too
+        if has_node("MaceSystem"):
+            $MaceSystem.visible = false
+
+func _on_level_reset():
+    is_dead = false
+    visible = true
+    collision_shape.disabled = false
+    global_position = spawn_position
+    current_velocity = Vector2.ZERO
+    momentum = Vector2.ZERO
+    # Show mace again and reset it
+    if has_node("MaceSystem"):
+        $MaceSystem.visible = true
+        $MaceSystem.initialize_rope()
+        # Reset mace damage flag
+        if $MaceSystem.has_node("Mace"):
+            $MaceSystem/Mace.can_damage = false
+            await get_tree().create_timer(1.0).timeout
+            $MaceSystem/Mace.can_damage = true
 
 func _register_input_actions():
     if not InputMap.has_action(move_up_action):
@@ -75,6 +111,9 @@ func _register_input_actions():
         InputMap.action_add_event(move_right_action, right_event)
 
 func _physics_process(delta):
+    if is_dead:
+        return
+
     var input_dir = Vector2.ZERO
 
     if Input.is_action_pressed(move_up_action):
