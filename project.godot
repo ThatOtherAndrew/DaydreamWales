@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Daydream Wales"
-run/main_scene="uid://c5h2yak8m7n4p"
+run/main_scene="uid://b1ocdrh0q4pff"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
