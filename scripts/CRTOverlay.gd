@@ -65,6 +65,9 @@ func setup_crt_effect():
     # Ensure we're on top but below UI
     z_index = 50
 
+    # Make sure this doesn't block mouse input
+    mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 func update_shader_params():
     if not crt_material:
         return

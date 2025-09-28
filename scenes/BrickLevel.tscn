@@ -49,4 +49,3 @@ move_up_action = "p2_move_up"
 move_down_action = "p2_move_down"
 move_left_action = "p2_move_left"
 move_right_action = "p2_move_right"
-

@@ -35,6 +35,9 @@ func _ready():
     # Make sure we're on top
     z_index = 100
 
+    # Make sure this doesn't block mouse input
+    mouse_filter = Control.MOUSE_FILTER_IGNORE
+
     # Create white flash overlay
     white_flash_overlay = ColorRect.new()
     white_flash_overlay.anchor_left = 0
@@ -43,6 +46,7 @@ func _ready():
     white_flash_overlay.anchor_bottom = 1
     white_flash_overlay.color = Color(1, 1, 1, 0)  # Start transparent white
     white_flash_overlay.z_index = 101  # Above the VHS effect
+    white_flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Don't block mouse
     add_child(white_flash_overlay)
 
 func play_respawn_transition():

@@ -15,6 +15,7 @@ func _ready():
 	# Create the CRT overlay node
 	crt_overlay = ColorRect.new()
 	crt_overlay.name = "CRTOverlay"
+	crt_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Don't block mouse input
 	crt_overlay.set_script(load("res://scripts/CRTOverlay.gd"))
 	crt_layer.add_child(crt_overlay)
 
@@ -27,6 +28,7 @@ func _ready():
 	# Create the respawn transition node
 	respawn_transition = ColorRect.new()
 	respawn_transition.name = "RespawnTransition"
+	respawn_transition.mouse_filter = Control.MOUSE_FILTER_IGNORE  # Don't block mouse input
 	respawn_transition.set_script(load("res://scripts/RespawnTransition.gd"))
 	transition_layer.add_child(respawn_transition)
 
