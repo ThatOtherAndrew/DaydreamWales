@@ -59,8 +59,3 @@ bus = &"Soundtrack"
 parameters/looping = true
 script = ExtResource("6_sound")
 
-[node name="TapeStopSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("7_tape")
-volume_db = 5.0
-pitch_scale = 0.2
-bus = &"Soundtrack"
