@@ -2,20 +2,20 @@
 extends ColorRect
 
 @export_group("Screen Curvature")
-@export_range(0.0, 0.5) var curvature_x: float = 0.1
-@export_range(0.0, 0.5) var curvature_y: float = 0.1
+@export_range(0.0, 0.5) var curvature_x: float = 0.025
+@export_range(0.0, 0.5) var curvature_y: float = 0.025
 
 @export_group("Scanlines")
-@export_range(0.0, 1.0) var scanline_intensity: float = 0.4
+@export_range(0.0, 1.0) var scanline_intensity: float = 0.15
 @export_range(100.0, 1000.0) var scanline_frequency: float = 400.0
-@export_range(0.0, 10.0) var scanline_speed: float = 1.0
+@export_range(0.0, 10.0) var scanline_speed: float = 2.0
 
 @export_group("Vignette")
 @export_range(0.0, 1.0) var vignette_intensity: float = 0.3
 @export_range(0.1, 2.0) var vignette_smoothness: float = 0.5
 
 @export_group("Chromatic Aberration")
-@export_range(0.0, 0.01) var aberration_amount: float = 0.003
+@export_range(0.0, 0.01) var aberration_amount: float = 0.001
 
 @export_group("Phosphor Glow")
 @export_range(0.0, 1.0) var glow_intensity: float = 0.1
@@ -99,11 +99,11 @@ func update_shader_params():
 	crt_material.set_shader_parameter("pixel_grid_size", pixel_grid_size)
 
 # Update in editor
-func _validate_property(property):
-	if Engine.is_editor_hint():
-		update_shader_params()
+func _validate_property(_property):
+    if Engine.is_editor_hint():
+        update_shader_params()
 
-func _set(property, value):
-	if Engine.is_editor_hint():
-		call_deferred("update_shader_params")
-	return false
+func _set(_property, _value):
+    if Engine.is_editor_hint():
+        call_deferred("update_shader_params")
+    return false

@@ -1,7 +1,6 @@
-[gd_scene load_steps=13 format=4 uid="uid://b1ocdrh0q4pff"]
+[gd_scene load_steps=8 format=4 uid="uid://b1ocdrh0q4pff"]
 
 [ext_resource type="PackedScene" uid="uid://b4j8y0x1k2m3n" path="res://scenes/Player.tscn" id="1_5u0me"]
-[ext_resource type="Shader" uid="uid://blkivxt5v7rnd" path="res://shaders/crt_monitor.gdshader" id="1_775by"]
 [ext_resource type="Script" uid="uid://cibyo4pseh1eb" path="res://scripts/Player2.gd" id="2_6c1f5"]
 [ext_resource type="TileSet" uid="uid://caq3sykwes14g" path="res://assets/BrickWallTileSet.tres" id="3_o1aly"]
 [ext_resource type="Script" uid="uid://dwhvhvavofqgh" path="res://scripts/GameManager.gd" id="4_game"]
@@ -97,9 +96,3 @@ move_down_action = "p2_move_down"
 move_left_action = "p2_move_left"
 move_right_action = "p2_move_right"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_o1aly")
-autoplay = true
-bus = &"Soundtrack"
-parameters/looping = true
-script = ExtResource("6_sound")

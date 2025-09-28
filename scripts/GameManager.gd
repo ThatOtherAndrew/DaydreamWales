@@ -4,8 +4,6 @@ var player1_deaths = 0
 var player2_deaths = 0
 var ui_canvas_layer: CanvasLayer
 var is_resetting = false
-var respawn_transition: ColorRect
-var crt_overlay: ColorRect
 
 signal player_died(player_num: int)
 signal level_reset()
@@ -116,10 +114,6 @@ func handle_player_death(player_num: int, death_position: Vector2):
 
 	# Wait 1.75 seconds, then start the VHS effect for the last 0.25 seconds
 	await get_tree().create_timer(1.75).timeout
-
-	# Start the VHS transition effect for the final 0.25 seconds
-	if respawn_transition:
-		respawn_transition.play_respawn_transition(0.25)
 
 	await get_tree().create_timer(0.25).timeout
 	reset_level()
