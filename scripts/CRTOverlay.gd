@@ -99,11 +99,11 @@ func update_shader_params():
     crt_material.set_shader_parameter("pixel_grid_size", pixel_grid_size)
 
 # Update in editor
-func _validate_property(property):
+func _validate_property(_property):
     if Engine.is_editor_hint():
         update_shader_params()
 
-func _set(property, value):
+func _set(_property, _value):
     if Engine.is_editor_hint():
         call_deferred("update_shader_params")
     return false

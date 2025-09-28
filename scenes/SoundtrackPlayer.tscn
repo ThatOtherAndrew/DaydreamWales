@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="AudioStream" uid="uid://byxrw164nep28" path="res://audio/soundtrack.ogg" id="1_audio"]
+[ext_resource type="Script" uid="uid://dtvkr0p7v4gbo" path="res://scripts/SoundtrackPlayer.gd" id="2_script"]
+
+[node name="SoundtrackPlayer" type="AudioStreamPlayer"]
+stream = ExtResource("1_audio")
+autoplay = true
+bus = &"Soundtrack"
+parameters/looping = true
+script = ExtResource("2_script")

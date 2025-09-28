@@ -12,10 +12,11 @@ func _ready():
     # Add to group for easy access
     add_to_group("soundtrack_player")
 
-    game_manager = get_node("/root/BrickLevel/GameManager")
-    if game_manager:
-        game_manager.player_died.connect(_on_player_died)
-        game_manager.level_reset.connect(_on_level_reset)
+    # Connect to scene tree to detect scene changes
+    get_tree().tree_changed.connect(_check_for_game_manager)
+
+    # Check if we're already in the game scene
+    _check_for_game_manager()
 
     pitch_scale = normal_pitch
 
@@ -24,6 +25,29 @@ func _ready():
         reverb_effect = AudioServer.get_bus_effect(bus_idx, 0) as AudioEffectReverb
         if reverb_effect:
             reverb_effect.wet = 0.0
+
+func _check_for_game_manager():
+    # Make sure we have a valid scene tree
+    if not get_tree() or not get_tree().current_scene:
+        return
+
+    # Try to find GameManager in the current scene
+    var root = get_tree().current_scene
+    if root and root.has_node("GameManager"):
+        var new_game_manager = root.get_node("GameManager")
+        if new_game_manager != game_manager:
+            # Disconnect from old game manager if exists
+            if game_manager and game_manager.has_signal("player_died"):
+                if game_manager.player_died.is_connected(_on_player_died):
+                    game_manager.player_died.disconnect(_on_player_died)
+                if game_manager.level_reset.is_connected(_on_level_reset):
+                    game_manager.level_reset.disconnect(_on_level_reset)
+
+            # Connect to new game manager
+            game_manager = new_game_manager
+            if game_manager.has_signal("player_died"):
+                game_manager.player_died.connect(_on_player_died)
+                game_manager.level_reset.connect(_on_level_reset)
 
 func _on_player_died(_player_num: int):
     if tween:

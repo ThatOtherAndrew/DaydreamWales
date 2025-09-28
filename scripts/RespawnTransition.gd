@@ -45,7 +45,7 @@ func _ready():
     white_flash_overlay.z_index = 101  # Above the VHS effect
     add_child(white_flash_overlay)
 
-func play_respawn_transition(duration: float = 0.25):
+func play_respawn_transition():
     if transition_active:
         return
 

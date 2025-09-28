@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="Daydream Wales"
-run/main_scene="uid://caqn21j4sbamt"
+run/main_scene="res://scenes/Menu.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
+
+[autoload]
+
+SoundtrackPlayer="*res://scenes/SoundtrackPlayer.tscn"
 
 [audio]
 

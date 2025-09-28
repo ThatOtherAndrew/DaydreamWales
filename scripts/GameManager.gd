@@ -83,7 +83,7 @@ func handle_player_death(player_num: int, death_position: Vector2):
 
     # Start the VHS transition effect for the final 0.25 seconds
     if respawn_transition:
-        respawn_transition.play_respawn_transition(0.25)
+        respawn_transition.play_respawn_transition()
 
     await get_tree().create_timer(0.25).timeout
     reset_level()

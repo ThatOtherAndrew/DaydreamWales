@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://b1ocdrh0q4pff"]
+[gd_scene load_steps=11 format=4 uid="uid://b1ocdrh0q4pff"]
 
 [ext_resource type="PackedScene" uid="uid://b4j8y0x1k2m3n" path="res://scenes/Player.tscn" id="1_5u0me"]
 [ext_resource type="Shader" uid="uid://blkivxt5v7rnd" path="res://shaders/crt_monitor.gdshader" id="1_775by"]
@@ -6,8 +6,6 @@
 [ext_resource type="TileSet" uid="uid://caq3sykwes14g" path="res://assets/BrickWallTileSet.tres" id="3_o1aly"]
 [ext_resource type="Script" uid="uid://dwhvhvavofqgh" path="res://scripts/GameManager.gd" id="4_game"]
 [ext_resource type="Texture2D" uid="uid://tm7emq0vd78u" path="res://assets/dirt.png" id="4_miqmb"]
-[ext_resource type="AudioStream" uid="uid://byxrw164nep28" path="res://audio/soundtrack.ogg" id="5_o1aly"]
-[ext_resource type="Script" uid="uid://dtvkr0p7v4gbo" path="res://scripts/SoundtrackPlayer.gd" id="6_sound"]
 [ext_resource type="Script" uid="uid://dokrr23wayrvv" path="res://scripts/CRTOverlay.gd" id="7_crt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4cebe"]
@@ -91,9 +89,3 @@ move_down_action = "p2_move_down"
 move_left_action = "p2_move_left"
 move_right_action = "p2_move_right"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_o1aly")
-autoplay = true
-bus = &"Soundtrack"
-parameters/looping = true
-script = ExtResource("6_sound")
