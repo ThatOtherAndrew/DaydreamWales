@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://b1ocdrh0q4pff"]
+[gd_scene load_steps=10 format=4 uid="uid://b1ocdrh0q4pff"]
 
 [ext_resource type="PackedScene" uid="uid://b4j8y0x1k2m3n" path="res://scenes/Player.tscn" id="1_5u0me"]
 [ext_resource type="Script" uid="uid://cibyo4pseh1eb" path="res://scripts/Player2.gd" id="2_6c1f5"]
@@ -58,4 +58,3 @@ autoplay = true
 bus = &"Soundtrack"
 parameters/looping = true
 script = ExtResource("6_sound")
-
