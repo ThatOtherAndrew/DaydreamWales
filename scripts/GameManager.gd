@@ -12,9 +12,6 @@ func _ready():
     # Create UI overlay for death counter
     create_death_ui()
 
-    # Start playing soundtrack
-    play_soundtrack()
-
 func create_death_ui():
     var canvas_layer = CanvasLayer.new()
     add_child(canvas_layer)
@@ -92,17 +89,3 @@ func create_explosion(pos: Vector2):
 func reset_level():
     emit_signal("level_reset")
     is_resetting = false
-
-func play_soundtrack():
-    var audio_player = AudioStreamPlayer.new()
-    audio_player.stream = preload("res://assets/soundtrack.ogg")
-    audio_player.volume_db = 0.0  # Full volume
-    audio_player.bus = "Master"
-    audio_player.autoplay = true
-
-    # Set looping
-    if audio_player.stream:
-        audio_player.stream.loop = true
-
-    add_child(audio_player)
-    audio_player.play()

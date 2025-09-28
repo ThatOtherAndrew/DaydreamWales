@@ -14,6 +14,10 @@ config/name="Daydream Wales"
 run/main_scene="uid://b1ocdrh0q4pff"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 
+[audio]
+
+buses/default_bus_layout="res://audio/default_bus_layout.tres"
+
 [display]
 
 window/stretch/mode="viewport"
