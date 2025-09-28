@@ -7,10 +7,10 @@
 [ext_resource type="Script" uid="uid://dwhvhvavofqgh" path="res://scripts/GameManager.gd" id="4_game"]
 [ext_resource type="Texture2D" uid="uid://tm7emq0vd78u" path="res://assets/dirt.png" id="4_miqmb"]
 [ext_resource type="AudioStream" uid="uid://byxrw164nep28" path="res://audio/soundtrack.ogg" id="5_o1aly"]
-[ext_resource type="Script" uid="uid://dtvkr0p7v4gbo" path="res://scripts/SoundtrackPlayer.gd" id="6_sound"]
-[ext_resource type="Script" uid="uid://dokrr23wayrvv" path="res://scripts/CRTOverlay.gd" id="7_crt"]
+[ext_resource type="Script" path="res://scripts/SoundtrackPlayer.gd" id="6_sound"]
+[ext_resource type="Script" path="res://scripts/CRTOverlay.gd" id="7_crt"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4cebe"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_775by"]
 shader = ExtResource("1_775by")
 shader_parameter/curvature_x = 0.025
 shader_parameter/curvature_y = 0.025
@@ -48,10 +48,16 @@ layer = 5
 
 [node name="CRTOverlay" type="ColorRect" parent="CRTLayer"]
 z_index = 50
-material = SubResource("ShaderMaterial_4cebe")
+material = SubResource("ShaderMaterial_775by")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 183.0
+offset_top = 152.0
+offset_right = -383.0
+offset_bottom = -166.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("7_crt")
 curvature_x = 0.025
 curvature_y = 0.025

@@ -42,68 +42,68 @@ extends ColorRect
 var crt_material: ShaderMaterial
 
 func _ready():
-    setup_crt_effect()
-    update_shader_params()
+	setup_crt_effect()
+	update_shader_params()
 
 func setup_crt_effect():
-    # Create and setup the CRT shader material
-    crt_material = ShaderMaterial.new()
-    crt_material.shader = load("res://shaders/crt_monitor.gdshader")
+	# Create and setup the CRT shader material
+	crt_material = ShaderMaterial.new()
+	crt_material.shader = load("res://shaders/crt_monitor.gdshader")
 
-    # Apply material to this ColorRect
-    material = crt_material
+	# Apply material to this ColorRect
+	material = crt_material
 
-    # Make sure it covers the entire screen
-    anchor_left = 0
-    anchor_top = 0
-    anchor_right = 1
-    anchor_bottom = 1
+	# Make sure it covers the entire screen
+	anchor_left = 0
+	anchor_top = 0
+	anchor_right = 1
+	anchor_bottom = 1
 
-    # Set proper color
-    color = Color.WHITE
+	# Set proper color
+	color = Color.WHITE
 
-    # Ensure we're on top but below UI
-    z_index = 50
+	# Ensure we're on top but below UI
+	z_index = 50
 
 func update_shader_params():
-    if not crt_material:
-        return
+	if not crt_material:
+		return
 
-    var strength = crt_effect_strength if crt_enabled else 0.0
+	var strength = crt_effect_strength if crt_enabled else 0.0
 
-    # Apply all parameters with strength modifier
-    crt_material.set_shader_parameter("curvature_x", curvature_x * strength)
-    crt_material.set_shader_parameter("curvature_y", curvature_y * strength)
-    crt_material.set_shader_parameter("scanline_intensity", scanline_intensity * strength)
-    crt_material.set_shader_parameter("scanline_frequency", scanline_frequency)
-    crt_material.set_shader_parameter("scanline_speed", scanline_speed)
-    crt_material.set_shader_parameter("vignette_intensity", vignette_intensity * strength)
-    crt_material.set_shader_parameter("vignette_smoothness", vignette_smoothness)
-    crt_material.set_shader_parameter("aberration_amount", aberration_amount * strength)
-    crt_material.set_shader_parameter("glow_intensity", glow_intensity * strength)
-    crt_material.set_shader_parameter("phosphor_color", phosphor_color)
-    crt_material.set_shader_parameter("noise_intensity", noise_intensity * strength)
-    crt_material.set_shader_parameter("flicker_intensity", flicker_intensity * strength)
-    crt_material.set_shader_parameter("flicker_speed", flicker_speed)
+	# Apply all parameters with strength modifier
+	crt_material.set_shader_parameter("curvature_x", curvature_x * strength)
+	crt_material.set_shader_parameter("curvature_y", curvature_y * strength)
+	crt_material.set_shader_parameter("scanline_intensity", scanline_intensity * strength)
+	crt_material.set_shader_parameter("scanline_frequency", scanline_frequency)
+	crt_material.set_shader_parameter("scanline_speed", scanline_speed)
+	crt_material.set_shader_parameter("vignette_intensity", vignette_intensity * strength)
+	crt_material.set_shader_parameter("vignette_smoothness", vignette_smoothness)
+	crt_material.set_shader_parameter("aberration_amount", aberration_amount * strength)
+	crt_material.set_shader_parameter("glow_intensity", glow_intensity * strength)
+	crt_material.set_shader_parameter("phosphor_color", phosphor_color)
+	crt_material.set_shader_parameter("noise_intensity", noise_intensity * strength)
+	crt_material.set_shader_parameter("flicker_intensity", flicker_intensity * strength)
+	crt_material.set_shader_parameter("flicker_speed", flicker_speed)
 
-    # These affect overall look, so we handle them differently
-    var adjusted_brightness = lerp(1.0, brightness, strength)
-    var adjusted_contrast = lerp(1.0, contrast, strength)
-    var adjusted_saturation = lerp(1.0, saturation, strength)
+	# These affect overall look, so we handle them differently
+	var adjusted_brightness = lerp(1.0, brightness, strength)
+	var adjusted_contrast = lerp(1.0, contrast, strength)
+	var adjusted_saturation = lerp(1.0, saturation, strength)
 
-    crt_material.set_shader_parameter("brightness", adjusted_brightness)
-    crt_material.set_shader_parameter("contrast", adjusted_contrast)
-    crt_material.set_shader_parameter("saturation", adjusted_saturation)
+	crt_material.set_shader_parameter("brightness", adjusted_brightness)
+	crt_material.set_shader_parameter("contrast", adjusted_contrast)
+	crt_material.set_shader_parameter("saturation", adjusted_saturation)
 
-    crt_material.set_shader_parameter("pixel_grid_intensity", pixel_grid_intensity * strength)
-    crt_material.set_shader_parameter("pixel_grid_size", pixel_grid_size)
+	crt_material.set_shader_parameter("pixel_grid_intensity", pixel_grid_intensity * strength)
+	crt_material.set_shader_parameter("pixel_grid_size", pixel_grid_size)
 
 # Update in editor
 func _validate_property(property):
-    if Engine.is_editor_hint():
-        update_shader_params()
+	if Engine.is_editor_hint():
+		update_shader_params()
 
 func _set(property, value):
-    if Engine.is_editor_hint():
-        call_deferred("update_shader_params")
-    return false
+	if Engine.is_editor_hint():
+		call_deferred("update_shader_params")
+	return false
