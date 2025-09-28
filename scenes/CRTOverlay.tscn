@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5hp2xy8mf4r3"]
+
+[ext_resource type="Script" uid="uid://b7qvx3m2k8y5n" path="res://scripts/CRTOverlay.gd" id="1"]
+[ext_resource type="Shader" uid="uid://dm5qx7p2k3v8j" path="res://shaders/crt_monitor.gdshader" id="2"]
+
+[node name="CRTOverlay" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(1, 1, 1, 1)
+script = ExtResource("1")
