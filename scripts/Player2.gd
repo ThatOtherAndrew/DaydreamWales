@@ -46,161 +46,161 @@ var spawn_position: Vector2
 var is_dead = false
 
 func _ready():
-	_register_input_actions()
-	sprite = $Visual/Sprite2D
-	collision_shape = $CollisionShape2D
-	collision_shape.scale = Vector2(sprite_scale, sprite_scale)
-	spawn_position = global_position
+    _register_input_actions()
+    sprite = $Visual/Sprite2D
+    collision_shape = $CollisionShape2D
+    collision_shape.scale = Vector2(sprite_scale, sprite_scale)
+    spawn_position = global_position
 
-	# Connect to GameManager signals
-	await get_tree().process_frame
-	var game_manager = get_tree().current_scene.get_node_or_null("GameManager")
-	if game_manager:
-		game_manager.player_died.connect(_on_player_died)
-		game_manager.level_reset.connect(_on_level_reset)
+    # Connect to GameManager signals
+    await get_tree().process_frame
+    var game_manager = get_tree().current_scene.get_node_or_null("GameManager")
+    if game_manager:
+        game_manager.player_died.connect(_on_player_died)
+        game_manager.level_reset.connect(_on_level_reset)
 
 func _on_player_died(player_num: int):
-	if name == "Player2" and player_num == 2:
-		is_dead = true
-		visible = false
-		collision_shape.disabled = true
-		# Hide mace too
-		if has_node("MaceSystem"):
-			$MaceSystem.visible = false
+    if name == "Player2" and player_num == 2:
+        is_dead = true
+        visible = false
+        collision_shape.disabled = true
+        # Hide mace too
+        if has_node("MaceSystem"):
+            $MaceSystem.visible = false
 
 func _on_level_reset():
-	is_dead = false
-	visible = true
-	collision_shape.disabled = false
-	global_position = spawn_position
-	current_velocity = Vector2.ZERO
-	momentum = Vector2.ZERO
-	# Show mace again and reset it
-	if has_node("MaceSystem"):
-		$MaceSystem.visible = true
-		$MaceSystem.initialize_rope()
-		# Reset mace damage flag
-		if $MaceSystem.has_node("Mace"):
-			$MaceSystem/Mace.can_damage = false
-			await get_tree().create_timer(1.0).timeout
-			$MaceSystem/Mace.can_damage = true
+    is_dead = false
+    visible = true
+    collision_shape.disabled = false
+    global_position = spawn_position
+    current_velocity = Vector2.ZERO
+    momentum = Vector2.ZERO
+    # Show mace again and reset it
+    if has_node("MaceSystem"):
+        $MaceSystem.visible = true
+        $MaceSystem.initialize_rope()
+        # Reset mace damage flag
+        if $MaceSystem.has_node("Mace"):
+            $MaceSystem/Mace.can_damage = false
+            await get_tree().create_timer(1.0).timeout
+            $MaceSystem/Mace.can_damage = true
 
 func _register_input_actions():
-	if not InputMap.has_action(move_up_action):
-		InputMap.add_action(move_up_action)
-		var up_event = InputEventKey.new()
-		up_event.keycode = KEY_UP
-		InputMap.action_add_event(move_up_action, up_event)
+    if not InputMap.has_action(move_up_action):
+        InputMap.add_action(move_up_action)
+        var up_event = InputEventKey.new()
+        up_event.keycode = KEY_UP
+        InputMap.action_add_event(move_up_action, up_event)
 
-	if not InputMap.has_action(move_down_action):
-		InputMap.add_action(move_down_action)
-		var down_event = InputEventKey.new()
-		down_event.keycode = KEY_DOWN
-		InputMap.action_add_event(move_down_action, down_event)
+    if not InputMap.has_action(move_down_action):
+        InputMap.add_action(move_down_action)
+        var down_event = InputEventKey.new()
+        down_event.keycode = KEY_DOWN
+        InputMap.action_add_event(move_down_action, down_event)
 
-	if not InputMap.has_action(move_left_action):
-		InputMap.add_action(move_left_action)
-		var left_event = InputEventKey.new()
-		left_event.keycode = KEY_LEFT
-		InputMap.action_add_event(move_left_action, left_event)
+    if not InputMap.has_action(move_left_action):
+        InputMap.add_action(move_left_action)
+        var left_event = InputEventKey.new()
+        left_event.keycode = KEY_LEFT
+        InputMap.action_add_event(move_left_action, left_event)
 
-	if not InputMap.has_action(move_right_action):
-		InputMap.add_action(move_right_action)
-		var right_event = InputEventKey.new()
-		right_event.keycode = KEY_RIGHT
-		InputMap.action_add_event(move_right_action, right_event)
+    if not InputMap.has_action(move_right_action):
+        InputMap.add_action(move_right_action)
+        var right_event = InputEventKey.new()
+        right_event.keycode = KEY_RIGHT
+        InputMap.action_add_event(move_right_action, right_event)
 
 func _physics_process(delta):
-	if is_dead:
-		return
+    if is_dead:
+        return
 
-	var input_dir = Vector2.ZERO
+    var input_dir = Vector2.ZERO
 
-	if Input.is_action_pressed(move_up_action):
-		input_dir.y -= 1
-	if Input.is_action_pressed(move_down_action):
-		input_dir.y += 1
-	if Input.is_action_pressed(move_left_action):
-		input_dir.x -= 1
-	if Input.is_action_pressed(move_right_action):
-		input_dir.x += 1
+    if Input.is_action_pressed(move_up_action):
+        input_dir.y -= 1
+    if Input.is_action_pressed(move_down_action):
+        input_dir.y += 1
+    if Input.is_action_pressed(move_left_action):
+        input_dir.x -= 1
+    if Input.is_action_pressed(move_right_action):
+        input_dir.x += 1
 
-	if input_dir.length() > 0:
-		input_dir = input_dir.normalized()
-		if input_dir.x != 0 and input_dir.y != 0:
-			input_dir *= diagonal_compensation
+    if input_dir.length() > 0:
+        input_dir = input_dir.normalized()
+        if input_dir.x != 0 and input_dir.y != 0:
+            input_dir *= diagonal_compensation
 
-	if input_dir != Vector2.ZERO:
-		var target_velocity = input_dir * max_speed
+    if input_dir != Vector2.ZERO:
+        var target_velocity = input_dir * max_speed
 
-		var accel = acceleration
+        var accel = acceleration
 
-		if current_velocity.length() > 0:
-			var dot = current_velocity.normalized().dot(input_dir)
-			if dot < -0.5:
-				accel *= reverse_boost
-			elif dot < 0.7:
-				accel *= turn_boost
+        if current_velocity.length() > 0:
+            var dot = current_velocity.normalized().dot(input_dir)
+            if dot < -0.5:
+                accel *= reverse_boost
+            elif dot < 0.7:
+                accel *= turn_boost
 
-		if speed_ramp_curve > 0:
-			var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
-			accel *= (1.0 + speed_factor * 0.5)
+        if speed_ramp_curve > 0:
+            var speed_factor = pow(current_velocity.length() / max_speed, speed_ramp_curve)
+            accel *= (1.0 + speed_factor * 0.5)
 
-		current_velocity = current_velocity.lerp(target_velocity, min(1.0, accel * delta / max_speed))
+        current_velocity = current_velocity.lerp(target_velocity, min(1.0, accel * delta / max_speed))
 
-		momentum = momentum.lerp(current_velocity * momentum_retention, velocity_smoothing)
+        momentum = momentum.lerp(current_velocity * momentum_retention, velocity_smoothing)
 
-		current_velocity = (current_velocity * input_responsiveness + momentum * (1.0 - input_responsiveness))
-	else:
-		current_velocity = current_velocity.move_toward(Vector2.ZERO, friction * delta)
-		momentum = momentum * 0.9
+        current_velocity = (current_velocity * input_responsiveness + momentum * (1.0 - input_responsiveness))
+    else:
+        current_velocity = current_velocity.move_toward(Vector2.ZERO, friction * delta)
+        momentum = momentum * 0.9
 
-		if current_velocity.length() < stop_threshold:
-			current_velocity = Vector2.ZERO
-			momentum = Vector2.ZERO
+        if current_velocity.length() < stop_threshold:
+            current_velocity = Vector2.ZERO
+            momentum = Vector2.ZERO
 
-	if current_velocity.length() > max_speed:
-		if current_velocity.length() > max_speed * max_overspeed:
-			current_velocity = current_velocity.normalized() * max_speed * max_overspeed
-		else:
-			current_velocity *= overspeed_decay
+    if current_velocity.length() > max_speed:
+        if current_velocity.length() > max_speed * max_overspeed:
+            current_velocity = current_velocity.normalized() * max_speed * max_overspeed
+        else:
+            current_velocity *= overspeed_decay
 
-	velocity = current_velocity
-	move_and_slide()
+    velocity = current_velocity
+    move_and_slide()
 
-	var is_decelerating = current_velocity.length() < previous_velocity.length()
-	var is_slow = current_velocity.length() < happy_face_speed_threshold
+    var is_decelerating = current_velocity.length() < previous_velocity.length()
+    var is_slow = current_velocity.length() < happy_face_speed_threshold
 
-	var was_stopped = previous_velocity.length() <= stop_threshold
-	var is_moving = current_velocity.length() > stop_threshold
+    var was_stopped = previous_velocity.length() <= stop_threshold
+    var is_moving = current_velocity.length() > stop_threshold
 
-	var direction_change = 0.0
-	if previous_velocity.length() > stop_threshold and current_velocity.length() > stop_threshold:
-		direction_change = 1.0 - previous_velocity.normalized().dot(current_velocity.normalized())
+    var direction_change = 0.0
+    if previous_velocity.length() > stop_threshold and current_velocity.length() > stop_threshold:
+        direction_change = 1.0 - previous_velocity.normalized().dot(current_velocity.normalized())
 
-	if (was_stopped and is_moving) or (direction_change > 0.5):
-		acceleration_spike_timer = acceleration_spike_duration
+    if (was_stopped and is_moving) or (direction_change > 0.5):
+        acceleration_spike_timer = acceleration_spike_duration
 
-	if is_decelerating and is_slow:
-		sprite.texture = happy_texture
-	elif current_velocity.length() > stop_threshold:
-		sprite.texture = angry_texture
+    if is_decelerating and is_slow:
+        sprite.texture = happy_texture
+    elif current_velocity.length() > stop_threshold:
+        sprite.texture = angry_texture
 
-	if current_velocity.length() > stop_threshold:
-		var target_rotation = current_velocity.angle() + PI / 2
-		sprite.rotation = lerp_angle(sprite.rotation, target_rotation, rotation_smoothing)
+    if current_velocity.length() > stop_threshold:
+        var target_rotation = current_velocity.angle() + PI / 2
+        sprite.rotation = lerp_angle(sprite.rotation, target_rotation, rotation_smoothing)
 
-	var speed_ratio = clamp(current_velocity.length() / max_speed, 0.0, 1.0)
-	var intensity_multiplier = 1.0
+    var speed_ratio = clamp(current_velocity.length() / max_speed, 0.0, 1.0)
+    var intensity_multiplier = 1.0
 
-	if acceleration_spike_timer > 0:
-		var spike_progress = acceleration_spike_timer / acceleration_spike_duration
-		intensity_multiplier = 1.0 + (acceleration_spike_multiplier - 1.0) * spike_progress * spike_progress
-		acceleration_spike_timer -= delta
+    if acceleration_spike_timer > 0:
+        var spike_progress = acceleration_spike_timer / acceleration_spike_duration
+        intensity_multiplier = 1.0 + (acceleration_spike_multiplier - 1.0) * spike_progress * spike_progress
+        acceleration_spike_timer -= delta
 
-	var stretch = 1.0 + (speed_ratio * squash_stretch_intensity * intensity_multiplier)
-	var squash = 1.0 - (speed_ratio * squash_stretch_intensity * 0.5 * intensity_multiplier)
-	var target_scale = Vector2(squash * sprite_scale, stretch * sprite_scale)
-	sprite.scale = sprite.scale.lerp(target_scale, squash_stretch_smoothing)
+    var stretch = 1.0 + (speed_ratio * squash_stretch_intensity * intensity_multiplier)
+    var squash = 1.0 - (speed_ratio * squash_stretch_intensity * 0.5 * intensity_multiplier)
+    var target_scale = Vector2(squash * sprite_scale, stretch * sprite_scale)
+    sprite.scale = sprite.scale.lerp(target_scale, squash_stretch_smoothing)
 
-	previous_velocity = current_velocity
+    previous_velocity = current_velocity
