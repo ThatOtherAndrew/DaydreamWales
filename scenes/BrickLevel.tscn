@@ -38,4 +38,4 @@ tile_set = ExtResource("3_o1aly")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_o1aly")
 autoplay = true
-parameters/looping = false
+parameters/looping = true
