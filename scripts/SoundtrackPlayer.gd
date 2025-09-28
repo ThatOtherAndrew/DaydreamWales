@@ -9,6 +9,9 @@ var reverb_effect: AudioEffectReverb
 var max_wet = 0.7
 
 func _ready():
+    # Add to group for easy access
+    add_to_group("soundtrack_player")
+
     game_manager = get_node("/root/BrickLevel/GameManager")
     if game_manager:
         game_manager.player_died.connect(_on_player_died)

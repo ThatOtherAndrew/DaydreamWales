@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkp8m3vhx4y2n"]
+
+[ext_resource type="Script" uid="uid://brx5qth3y8m4k" path="res://scripts/RespawnTransition.gd" id="1"]
+[ext_resource type="Shader" uid="uid://c7n8xm4p3kv2j" path="res://shaders/vhs_rewind.gdshader" id="2"]
+
+[node name="RespawnTransition" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(1, 1, 1, 0)
+script = ExtResource("1")

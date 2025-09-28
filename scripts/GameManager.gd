@@ -4,6 +4,7 @@ var player1_deaths = 0
 var player2_deaths = 0
 var death_label: Label
 var is_resetting = false
+var respawn_transition: ColorRect
 
 signal player_died(player_num: int)
 signal level_reset()
@@ -11,6 +12,8 @@ signal level_reset()
 func _ready():
     # Create UI overlay for death counter
     create_death_ui()
+    # Create respawn transition overlay
+    create_respawn_transition()
 
 func create_death_ui():
     var canvas_layer = CanvasLayer.new()
@@ -21,6 +24,17 @@ func create_death_ui():
     death_label.position = Vector2(20, 20)
     death_label.text = "Player 1 Deaths: 0 | Player 2 Deaths: 0"
     canvas_layer.add_child(death_label)
+
+func create_respawn_transition():
+    # Create a new canvas layer for the transition effect
+    var transition_layer = CanvasLayer.new()
+    transition_layer.layer = 10  # High layer to be on top
+    add_child(transition_layer)
+
+    # Create the respawn transition node
+    respawn_transition = ColorRect.new()
+    respawn_transition.set_script(load("res://scripts/RespawnTransition.gd"))
+    transition_layer.add_child(respawn_transition)
 
 func handle_player_death(player_num: int, death_position: Vector2):
     if is_resetting:
@@ -41,9 +55,17 @@ func handle_player_death(player_num: int, death_position: Vector2):
     # Hide the dead player
     emit_signal("player_died", player_num)
 
-    # Wait 2 seconds then reset
+    # Start VHS rewind transition and wait for reset
     is_resetting = true
-    await get_tree().create_timer(2.0).timeout
+
+    # Wait 1.75 seconds, then start the VHS effect for the last 0.25 seconds
+    await get_tree().create_timer(1.75).timeout
+
+    # Start the VHS transition effect for the final 0.25 seconds
+    if respawn_transition:
+        respawn_transition.play_respawn_transition(0.25)
+
+    await get_tree().create_timer(0.25).timeout
     reset_level()
 
 func create_explosion(pos: Vector2):
