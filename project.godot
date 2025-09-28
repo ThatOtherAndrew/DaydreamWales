@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.5", "GL Compatibility")
 [autoload]
 
 SoundtrackPlayer="*res://scenes/SoundtrackPlayer.tscn"
+GlobalEffects="*res://scenes/GlobalEffects.tscn"
 
 [audio]
 

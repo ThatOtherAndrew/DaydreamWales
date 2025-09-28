@@ -43,7 +43,14 @@ func _on_button_pressed() -> void:
 	if fade_overlay:
 		tween.tween_property(fade_overlay, "color:a", 1.0, 0.4)
 
-	# Wait for tweens to complete before changing scene
+	# Wait for tweens to complete
 	await tween.finished
+
+	# Trigger respawn animation before changing scene
+	if GlobalEffects:
+		GlobalEffects.play_respawn_transition()
+
+	# Small delay to let the respawn effect start
+	await get_tree().create_timer(0.1).timeout
 
 	get_tree().change_scene_to_file("res://scenes/BrickLevel.tscn")
