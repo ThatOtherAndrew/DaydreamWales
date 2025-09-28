@@ -11,12 +11,12 @@ signal player_died(player_num: int)
 signal level_reset()
 
 func _ready():
-	# Check if CRT overlay already exists in the scene
-	var existing_crt = get_tree().current_scene.get_node_or_null("CRTLayer/CRTOverlay")
-	if existing_crt:
-		crt_overlay = existing_crt
-	else:
-		# Create CRT effect overlay if it doesn't exist
+    # Check if CRT overlay already exists in the scene
+    var existing_crt = get_tree().current_scene.get_node_or_null("CRTLayer/CRTOverlay")
+    if existing_crt:
+        crt_overlay = existing_crt
+    else:
+        # Create CRT effect overlay if it doesn't exist
 		create_crt_overlay()
 
 	# Create UI overlay for death counter
