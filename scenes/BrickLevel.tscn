@@ -1,12 +1,35 @@
-[gd_scene load_steps=10 format=4 uid="uid://b1ocdrh0q4pff"]
+[gd_scene load_steps=13 format=4 uid="uid://b1ocdrh0q4pff"]
 
 [ext_resource type="PackedScene" uid="uid://b4j8y0x1k2m3n" path="res://scenes/Player.tscn" id="1_5u0me"]
+[ext_resource type="Shader" uid="uid://blkivxt5v7rnd" path="res://shaders/crt_monitor.gdshader" id="1_775by"]
 [ext_resource type="Script" uid="uid://cibyo4pseh1eb" path="res://scripts/Player2.gd" id="2_6c1f5"]
 [ext_resource type="TileSet" uid="uid://caq3sykwes14g" path="res://assets/BrickWallTileSet.tres" id="3_o1aly"]
 [ext_resource type="Script" uid="uid://dwhvhvavofqgh" path="res://scripts/GameManager.gd" id="4_game"]
 [ext_resource type="Texture2D" uid="uid://tm7emq0vd78u" path="res://assets/dirt.png" id="4_miqmb"]
 [ext_resource type="AudioStream" uid="uid://byxrw164nep28" path="res://audio/soundtrack.ogg" id="5_o1aly"]
 [ext_resource type="Script" uid="uid://dtvkr0p7v4gbo" path="res://scripts/SoundtrackPlayer.gd" id="6_sound"]
+[ext_resource type="Script" uid="uid://dokrr23wayrvv" path="res://scripts/CRTOverlay.gd" id="7_crt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4cebe"]
+shader = ExtResource("1_775by")
+shader_parameter/curvature_x = 0.025
+shader_parameter/curvature_y = 0.025
+shader_parameter/scanline_intensity = 0.15
+shader_parameter/scanline_frequency = 400.0
+shader_parameter/scanline_speed = 2.0
+shader_parameter/vignette_intensity = 0.3
+shader_parameter/vignette_smoothness = 0.5
+shader_parameter/aberration_amount = 0.001
+shader_parameter/glow_intensity = 0.1
+shader_parameter/phosphor_color = Vector3(1, 1, 0.95)
+shader_parameter/noise_intensity = 0.05
+shader_parameter/flicker_intensity = 0.02
+shader_parameter/flicker_speed = 10.0
+shader_parameter/brightness = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 0.95
+shader_parameter/pixel_grid_intensity = 0.1
+shader_parameter/pixel_grid_size = Vector2(640, 480)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n4llp"]
 texture = ExtResource("4_miqmb")
@@ -19,6 +42,22 @@ texture = ExtResource("4_miqmb")
 sources/0 = SubResource("TileSetAtlasSource_n4llp")
 
 [node name="BrickLevel" type="Node2D"]
+
+[node name="CRTLayer" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="CRTOverlay" type="ColorRect" parent="CRTLayer"]
+z_index = 50
+material = SubResource("ShaderMaterial_4cebe")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("7_crt")
+curvature_x = 0.025
+curvature_y = 0.025
+scanline_intensity = 0.15
+scanline_speed = 2.0
+aberration_amount = 0.001
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("4_game")
